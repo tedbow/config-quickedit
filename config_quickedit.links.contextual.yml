@@ -7,6 +7,6 @@ config_quickedit.node.order_fields:
   route_name: entity.entity_view_display.node.view_mode
   group: config_quickedit
 config_quickedit.node.field_formatter:
-  title: Order Fields
+  title: Formatter Settings
   route_name: config_quickedit.field_formater
   group: config_quickedit_field

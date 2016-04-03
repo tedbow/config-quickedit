@@ -62,7 +62,7 @@ class ViewAlter implements ViewAlterInterface {
         ],
       ];
       $build['#attached']['library'][] = 'config_quickedit/config_quickedit';
-      $this->addFieldLinks($build, $entity);
+      //$this->addFieldLinks($build, $entity);
 
 
     }
@@ -74,19 +74,26 @@ class ViewAlter implements ViewAlterInterface {
    * @param array $build
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    */
-  protected function addFieldLinks(array &$build, ContentEntityInterface $entity) {
-    foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-      if ($this->isFormatterCompatible($field_definition, $build)) {
-        $build[$field_name]['#contextual_links']['config_quickedit_field'] = [
-          'route_parameters' => [
-            'entity_type_id' => $entity->getEntityTypeId(),
-            'bundle' => $entity->bundle(),
-            'view_mode_name' => $build['#view_mode'],
-            'field_name' => $field_name,
-          ],
-        ];
-        // @todo Do we need to add library here in case field is shown without entity?
-      }
+  public function addFieldLinks(&$variables) {
+    $element = &$variables['element'];
+    /** @var ContentEntityInterface $entity */
+    $entity = $element['#object'];
+    $field_name = $element['#field_name'];
+    $field_definition = $entity->getFieldDefinition($field_name);
+    if ($field_definition->isDisplayConfigurable('view')) {
+      $element['#contextual_links']['config_quickedit_field'] = [
+        'route_parameters' => [
+          'entity_type_id' => $entity->getEntityTypeId(),
+          'bundle' => $entity->bundle(),
+          'view_mode_name' => $element['#view_mode'],
+          'field_name' => $field_name,
+        ],
+      ];
+      $element['contextual_links'] = array(
+        '#type' => 'contextual_links_placeholder',
+        '#id' => _contextual_links_to_id($element['#contextual_links']),
+      );
+      $element['#attached']['library'][] = 'config_quickedit/config_quickedit';
     }
   }
 

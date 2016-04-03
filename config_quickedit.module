@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_help().
@@ -33,7 +35,41 @@ function config_quickedit_entity_view_alter(array &$build, Drupal\Core\Entity\En
     $viewAlter = \Drupal::service('config_quickedit.view_alter');
     $viewAlter->addLinks($build, $entity);
   }
+
 }
+
+/**
+ * Implements hook_preprocess().
+ */
+function config_quickedit_preprocess(&$variables, $hook) {
+  if ($hook == 'field') {
+    /** @var \Drupal\config_quickedit\ViewAlter $viewAlter */
+    $viewAlter = \Drupal::service('config_quickedit.view_alter');
+    $viewAlter->addFieldLinks($variables);
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field templates.
+ */
+function config_quickedit_preprocess_field(&$variables, $hook) {
+  return;
+  $element = &$variables['element'];
+  if (isset($element['#contextual_links'])) {
+    $variables['title_suffix']['contextual_links'] = array(
+      '#type' => 'contextual_links_placeholder',
+      '#id' => _contextual_links_to_id($element['#contextual_links']),
+    );
+    if (isset($variables['title_suffix']['contextual_links'])) {
+
+      $element['#markup'] = SafeMarkup::format('<div@attributes></div>', ['@attributes' => new Attribute(['data-contextual-id' => $element['#id']])]);
+
+    }
+  }
+
+}
+
 
 function config_quickedit_contextual_links_view_alter(&$element, $items) {
   // Add another class to all contextual link lists to facilitate custom
@@ -55,7 +91,6 @@ function config_quickedit_contextual_links_view_alter(&$element, $items) {
         $url->setOption('attributes', $attributes);
       }
     }
-
   }
 }
 
