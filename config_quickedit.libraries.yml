@@ -1,0 +1,9 @@
+config_quickedit:
+  version: VERSION
+  js:
+    js/config_quickedit.js: { attributes: { defer: true }}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal.ajax
+    - core/drupalSettings

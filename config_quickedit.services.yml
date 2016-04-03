@@ -1,0 +1,11 @@
+services:
+  config_quickedit.view_alter:
+    class: Drupal\config_quickedit\ViewAlter
+    arguments: ["@entity_type.manager", '@entity_display.repository']
+
+  config_quickedit.route_subscriber:
+    class: Drupal\config_quickedit\Routing\RouteSubscriber
+    arguments: ["@entity_type.manager"]
+    tags:
+      - { name: event_subscriber }
+

@@ -1,0 +1,43 @@
+
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+# If the user accesses http://drupal8.dev/config_quickedit/load/{entity_type}/{entity_id}, the routing
+# system will look for a route with that path. In this case it will find a
+# match, and execute the _controller callback. In this case the callback is
+# defined as a classname
+# ("\Drupal\config_quickedit\Controller\DefaultController")
+# and a method ("load").
+config_quickedit.default_controller_load:
+  path: 'config_quickedit/load/{entity_type}/{entity_id}'
+  defaults:
+    _controller: '\Drupal\config_quickedit\Controller\DefaultController::load'
+    _title: 'Load'
+  requirements:
+    _permission: 'access content'
+
+config_quickedit.load:
+  path: 'config_quickedit/load'
+  defaults:
+    _entity_form: entity_view_display.config_quickedit
+    _title: 'Load'
+    entity_type_id: 'node'
+    bundle: 'article'
+    view_mode_name: 'teaser'
+  requirements:
+    _permission: 'access content'
+config_quickedit.load2:
+  path: 'config_quickedit/load2/{image_style}'
+  defaults:
+    _entity_form: image_style.edit
+    _title: 'Load'
+    image_style: large
+  requirements:
+    _permission: 'access content'
+config_quickedit.field_formater:
+  path: 'config_quickedit/{entity_type_id}/{bundle}/{view_mode_name}/{field_name}'
+  defaults:
+    _entity_form: entity_view_display.config_quickedit_formatter
+    _title: 'Load'
+  requirements:
+    _permission: 'access content'

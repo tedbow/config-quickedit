@@ -1,0 +1,12 @@
+# hard coding for nodes now.
+# @todo is there way to do this dynamically for every fieldable entity type?
+#   Quick Edit creates it's links in JS
+#   Turns out you can create as derivatives https://www.drupal.org/node/2133283
+config_quickedit.node.order_fields:
+  title: Order Fields
+  route_name: entity.entity_view_display.node.view_mode
+  group: config_quickedit
+config_quickedit.node.field_formatter:
+  title: Order Fields
+  route_name: config_quickedit.field_formater
+  group: config_quickedit_field
