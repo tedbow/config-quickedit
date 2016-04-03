@@ -85,6 +85,7 @@ function config_quickedit_contextual_links_view_alter(&$element, $items) {
           'data-config-quick-edit-parameters' => json_encode($url->getRouteParameters()),
           // @todo Convert into key to determine which config form to load.
           'data-config-quick-edit-route' => $url->getRouteName(),
+          'data-config-quick-edit-path' => $url->getInternalPath(),
          // 'class' => ['use-ajax'],
           //'data-dialog-type' => 'modal',
         ];
@@ -130,7 +131,7 @@ function config_quickedit_theme() {
   return [
     'config_quickedit' => [
       'variables' => [
-        'inner' => 'Dodo Brown',
+        'inner' => 'Filler...',
       ],
     ],
   ];

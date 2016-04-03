@@ -13,16 +13,18 @@
       return;
     }
 
-    var url = this.getAttribute('href');
+
+    if (this.hasAttribute('data-config-quick-edit-path')) {
+      var url = Drupal.url(this.getAttribute('data-config-quick-edit-path'));
+    }
+    else {
+      var url = this.getAttribute('href');
+    }
     event.preventDefault();
     // Create a Drupal.Ajax object without associating an element, a
     // progress indicator or a URL.
     var ajaxObject = Drupal.ajax({
-      //url: Drupal.url('config_quickedit/load/node/1'),
-      //url: Drupal.url('node/1/edit'),
-      //url: Drupal.url('config_quickedit/load2'),
-      url: Drupal.url('admin/config/media/image-styles/manage/medium/effects/bddf0d06-42f9-4c75-a700-a33cafa25ea0'),
-      //url: Drupal.url('config_quickedit/load'),
+      url: url,
       selector: '#config-quickedit-replace',
       //method: 'append',
       // @todo refreshless progress?
@@ -32,8 +34,8 @@
       //dialogType: 'refreshless'
     });
     ajaxObject.commands.insert = function (ajax, response, status) {
-      //$('#config-quickedit-replace').text('ny');
       if (response.method != 'prepend') {
+        $('#config-quickedit-replace').html('wh-');
         $('#config-quickedit-replace').append(response.data);
       }
 

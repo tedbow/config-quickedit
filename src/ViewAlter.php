@@ -56,14 +56,13 @@ class ViewAlter implements ViewAlterInterface {
 
       $build['#contextual_links']['config_quickedit'] = [
         'route_parameters' => [
+          'entity_type_id' => $entity->getEntityTypeId(),
           'node_type' => $entity->bundle(),
           'bundle' => $entity->bundle(),
           'view_mode_name' => $view_mode,
         ],
       ];
       $build['#attached']['library'][] = 'config_quickedit/config_quickedit';
-      //$this->addFieldLinks($build, $entity);
-
 
     }
   }
