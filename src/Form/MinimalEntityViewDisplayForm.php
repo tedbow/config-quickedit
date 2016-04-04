@@ -11,6 +11,14 @@ use Drupal\field_ui\Form\EntityViewDisplayEditForm;
  * @file
  * Contains \\${NAMESPACE}\MinimalEntityViewDisplayForm.
  */
+
+/**
+ * Class MinimalEntityViewDisplayForm
+ *
+ * @todo Update this form to show simple list of fields that can be re-ordered.
+ *
+ * @package Drupal\config_quickedit\Form
+ */
 class MinimalEntityViewDisplayForm extends EntityViewDisplayEditForm {
   protected function buildFieldRow(FieldDefinitionInterface $field_definition, array $form, FormStateInterface $form_state) {
     $field_row =  parent::buildFieldRow($field_definition,$form,$form_state);

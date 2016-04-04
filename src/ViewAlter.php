@@ -42,6 +42,10 @@ class ViewAlter implements ViewAlterInterface {
     $this->displayRepo = $display_repo;
   }
 
+  /**
+   * @param array $build
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   */
   public function addLinks(array &$build, ContentEntityInterface $entity) {
     $entity_type = $entity->getEntityTypeId();
     // For now hard code for nodes. @see config_quickedit.links.contextual.yml
@@ -57,7 +61,6 @@ class ViewAlter implements ViewAlterInterface {
       $build['#contextual_links']['config_quickedit'] = [
         'route_parameters' => [
           'entity_type_id' => $entity->getEntityTypeId(),
-          'node_type' => $entity->bundle(),
           'bundle' => $entity->bundle(),
           'view_mode_name' => $view_mode,
         ],

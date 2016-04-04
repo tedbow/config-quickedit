@@ -45,6 +45,7 @@ function config_quickedit_preprocess(&$variables, $hook) {
   if ($hook == 'field') {
     /** @var \Drupal\config_quickedit\ViewAlter $viewAlter */
     $viewAlter = \Drupal::service('config_quickedit.view_alter');
+    // @todo This currently does not work. Is it possible to add contextual links to fields?
     $viewAlter->addFieldLinks($variables);
   }
 
@@ -52,6 +53,8 @@ function config_quickedit_preprocess(&$variables, $hook) {
 
 /**
  * Implements hook_preprocess_HOOK() for field templates.
+ *
+ * @todo This currently does not work. Is it possible to add contextual links to fields?
  */
 function config_quickedit_preprocess_field(&$variables, $hook) {
   return;
@@ -67,13 +70,12 @@ function config_quickedit_preprocess_field(&$variables, $hook) {
 
     }
   }
-
 }
 
-
+/**
+ * Implements hook_contextual_links_view_alter().
+ */
 function config_quickedit_contextual_links_view_alter(&$element, $items) {
-  // Add another class to all contextual link lists to facilitate custom
-  // styling.
   if (isset($element['#contextual_links']['config_quickedit'])) {
     // Add attributes to load correct form.
     foreach ($element['#links'] as $id => &$link) {
@@ -94,17 +96,11 @@ function config_quickedit_contextual_links_view_alter(&$element, $items) {
   }
 }
 
-
+/**
+ * Implements hook_toolbar().
+ */
 function config_quickedit_toolbar() {
   $items = array();
-  // A tray may be associated with a tab.
-  //
-  // When the tab is activated, the tray will become visible, either in a
-  // horizontal or vertical orientation on the screen.
-  //
-  // The tray should contain a renderable array. An optional #heading property
-  // can be passed. This text is written to a heading tag in the tray as a
-  // landmark for accessibility.
   $items['config_quickedit'] = array(
     '#type' => 'toolbar_item',
     'tab' => array(
@@ -113,7 +109,7 @@ function config_quickedit_toolbar() {
       '#value' => t('Config Quick Edit'),
     ),
     'tray' => array(
-      '#heading' => t('Shopping cart actions'),
+      '#heading' => t('Config QuickEdit'),
       'content' => [
         '#theme' => 'config_quickedit',
       ],
@@ -138,8 +134,11 @@ function config_quickedit_theme() {
 
 /**
  * Implements hook_entity_type_alter().
+ *
+ * Adds our own form handler classes for quickedit context.
  */
 function config_quickedit_entity_type_alter(array &$entity_types) {
+
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['entity_view_display']->setFormClass('config_quickedit_full','\Drupal\config_quickedit\Form\MinimalEntityViewDisplayForm');
   $entity_types['entity_view_display']->setFormClass('config_quickedit_formatter','\Drupal\config_quickedit\Form\FieldFormatter');
