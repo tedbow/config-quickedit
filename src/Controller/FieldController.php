@@ -56,6 +56,7 @@ class FieldController extends ControllerBase{
             [
               'attributes' => [
                 'data-config-quick-edit-route' => 'config_quickedit.field_formatter',
+                'class' => ['refreshless-exclude'],
               ],
             ]
           );
