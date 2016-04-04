@@ -3,6 +3,6 @@
 #   Quick Edit creates it's links in JS
 #   Turns out you can create as derivatives https://www.drupal.org/node/2133283
 config_quickedit.entity_view_fields:
-  title: Sort Fields
+  title: Manage Fields
   route_name: config_quickedit.entity_view_fields
   group: config_quickedit

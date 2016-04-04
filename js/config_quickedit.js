@@ -4,7 +4,7 @@
 
   var configQuickEditSelector = 'a[data-config-quick-edit-route]';
   var configQuickEditReplaceSelector = '#config-quickedit-replace';
-  
+
   function handleClick(event) {
     // Middle click, cmd click, and ctrl click should open
     // links in a new tab as normal.
@@ -46,7 +46,11 @@
   Drupal.Ajax.prototype.beforeSubmit = function (form_values, element, options) {
     // If the submit is coming from the Config QuickEdit section then add a marking class.
     if (jQuery('#config-quickedit-replace').has(element).length) {
-      jQuery('#config-quickedit-replace').find('.use-ajax-submit').addClass('config-quickedit-trigger')
+      // @todo Check if the form was submitted or just a internal ajax change.
+      if (this.event != 'change') {
+        jQuery('#config-quickedit-replace').find('.use-ajax-submit').addClass('config-quickedit-trigger');
+      }
+
     }
   };
   $( document ).ajaxSuccess(function( event, xhr, settings ) {

@@ -20,12 +20,43 @@ use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 class FieldFormatter extends EntityViewDisplayEditForm {
   protected $field_name;
   public function form(array $form, FormStateInterface $form_state) {
+
+    $elements = [];
     // Get the corresponding plugin object.
     $plugin = $this->entity->getRenderer($this->field_name);
     $display_options = $this->entity->getComponent($this->field_name);
-    $plugin->setSettings($display_options['settings']);
-    return $plugin->settingsForm($form, $form_state);
+    $field_definitions = $this->getFieldDefinitions();
+    $elements['container'] = [
+      '#type' => 'container',
+      '#prefix' => '<div id="config-quickedit-formatter-wrapper" >',
+      '#suffix' => '</div>',
+    ];
+    $elements['container']['type'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Formatter'),
+      '#options' => $this->getPluginOptions($field_definitions[$this->field_name]),
+      '#default_value' => $display_options ? $display_options['type'] : 'hidden',
+      '#attributes' => array('class' => array('field-plugin-type')),
+      '#ajax' => [
+        // Could also use [ $this, 'colorCallback'].
+        'callback' => '::formatterCallback',
+        'wrapper' => 'config-quickedit-formatter-wrapper',
+      ]
+    ];
+    $values = $form_state->cleanValues()->getValues();
+    if ($display_options && $values['type'] != 'hidden') {
+      if ($display_options['type'] == $values['type']) {
+        $plugin->setSettings($display_options['settings']);
+      }
+      $elements['container']['formatter_settings'] = $plugin->settingsForm($form, $form_state);
+    }
 
+    return $elements;
+
+  }
+
+  public function formatterCallback(array &$form, FormStateInterface $form_state) {
+    return $form['container'];
   }
 
   protected function actionsElement(array $form, FormStateInterface $form_state) {
@@ -38,9 +69,15 @@ class FieldFormatter extends EntityViewDisplayEditForm {
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $form_values = $form_state->cleanValues()->getValues();
     /** @var  EntityViewDisplay $entity */
-    $field_component = $entity->getComponent($this->field_name);
-    $field_component['settings'] = $form_values;
-    $entity->setComponent($this->field_name, $field_component);
+    if ($form_values['type'] == 'hidden') {
+      $entity->removeComponent($this->field_name);
+    }
+    else {
+      $field_component = $entity->getComponent($this->field_name);
+      $field_component['settings'] = $form_values;
+      $entity->setComponent($this->field_name, $field_component);
+    }
+
   }
 
 
