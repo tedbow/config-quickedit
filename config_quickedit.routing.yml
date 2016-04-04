@@ -14,3 +14,10 @@ config_quickedit.field_formatter:
     _title: 'Fields'
   requirements:
     _custom_access: '\Drupal\config_quickedit\AccessChecker::checkEntityViewDisplay'
+config_quickedit.configure_block:
+  path: 'config_quickedit/block/{block}'
+  defaults:
+    _entity_form: 'block.config_quickedit'
+    _title: 'Configure block'
+  requirements:
+    _entity_access: 'block.update'

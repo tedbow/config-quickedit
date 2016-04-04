@@ -8,6 +8,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -76,24 +77,45 @@ function config_quickedit_preprocess_field(&$variables, $hook) {
  * Implements hook_contextual_links_view_alter().
  */
 function config_quickedit_contextual_links_view_alter(&$element, $items) {
+
   if (isset($element['#contextual_links']['config_quickedit'])) {
+
     // Add attributes to load correct form.
     foreach ($element['#links'] as $id => &$link) {
       // @todo Better way to identify links.
       if (stripos($id, 'config-quickedit') === 0) {
-        /** @var \Drupal\Core\Url $url */
-        $url = $link['url'];
-        $attributes = [
-          'data-config-quick-edit-parameters' => json_encode($url->getRouteParameters()),
-          // @todo Convert into key to determine which config form to load.
-          'data-config-quick-edit-route' => $url->getRouteName(),
-          'data-config-quick-edit-path' => $url->getInternalPath(),
-          'class' => ['refreshless-exclude'],
-        ];
-        $url->setOption('attributes', $attributes);
+        config_quickedit_add_contextual_links_attribute($link);
       }
     }
   }
+  if (isset($element['#links']['block-configure'])) {
+    $link = &$element['#links']['block-configure'];
+    /** @var \Drupal\Core\Url $url */
+    $url = $link['url'];
+    $override_url = Url::fromRoute(
+      'config_quickedit.configure_block',
+      [
+        'block' => $url->getRouteParameters()['block'],
+      ]
+    );
+    config_quickedit_add_contextual_links_attribute($link, $override_url->getInternalPath());
+  }
+}
+
+/**
+ * @param array $link
+ */
+function config_quickedit_add_contextual_links_attribute(array $link, $override_url = '') {
+  /** @var \Drupal\Core\Url $url */
+  $url = $link['url'];
+  $attributes = [
+    'data-config-quick-edit-parameters' => json_encode($url->getRouteParameters()),
+    // @todo Convert into key to determine which config form to load.
+    'data-config-quick-edit-route' => $url->getRouteName(),
+    'data-config-quick-edit-path' => $override_url ? :$url->getInternalPath(),
+    'class' => ['refreshless-exclude'],
+  ];
+  $url->setOption('attributes', $attributes);
 }
 
 /**
@@ -142,4 +164,6 @@ function config_quickedit_entity_type_alter(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['entity_view_display']->setFormClass('config_quickedit_full','\Drupal\config_quickedit\Form\MinimalEntityViewDisplayForm');
   $entity_types['entity_view_display']->setFormClass('config_quickedit_formatter','\Drupal\config_quickedit\Form\FieldFormatter');
+  $entity_types['block']->setFormClass('config_quickedit','\Drupal\config_quickedit\Form\BlockForm');
+
 }
