@@ -5,7 +5,7 @@ config_quickedit.entity_view_fields:
     _controller: '\Drupal\config_quickedit\Controller\FieldController::listField'
     _title: 'Fields'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\config_quickedit\AccessChecker::checkEntityViewDisplay'
 # Edit an individual field
 config_quickedit.field_formatter:
   path: 'config_quickedit/field-formatter/{entity_type_id}/{bundle}/{view_mode_name}/{field_name}'
@@ -13,4 +13,4 @@ config_quickedit.field_formatter:
     _entity_form: entity_view_display.config_quickedit_formatter
     _title: 'Fields'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\config_quickedit\AccessChecker::checkEntityViewDisplay'
